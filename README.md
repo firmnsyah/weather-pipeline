@@ -53,11 +53,11 @@ flowchart LR
 ```
         dim_city                fact_weather_daily              dim_date
    ┌───────────────┐         ┌──────────────────────┐      ┌──────────────┐
-   │ city_key (PK) │◄────────│ city_key (FK)         │─────►│ date_key (PK)│
-   │ city_name     │         │ date_key (FK)         │      │ full_date    │
-   │               │         │ temp_max / temp_min   │      │ year/month   │
-   └───────────────┘         │ precipitation_sum     │      │ day/dow      │
-                             │ windspeed_max         │      └──────────────┘
+   │ city_key (PK) │◄────────│ city_key (FK)        │─────►│ date_key (PK)│
+   │ city_name     │         │ date_key (FK)        │      │ full_date    │
+   │               │         │ temp_max / temp_min  │      │ year/month   │
+   └───────────────┘         │ precipitation_sum    │      │ day/dow      │
+                             │ windspeed_max        │      └──────────────┘
                              └──────────────────────┘
 ```
 **Grain fakta:** satu baris = satu kota per satu hari.
