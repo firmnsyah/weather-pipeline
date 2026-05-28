@@ -26,15 +26,15 @@ flowchart LR
 
 ## 🧰 Tech Stack
 
-| Lapisan | Tools |
-|---------|-------|
-| Ingestion | Python (`requests`, `pandas`, `pyarrow`) |
-| Storage / Warehouse | PostgreSQL 16, Parquet (landing zone) |
-| Transformasi | **dbt** (staging → marts, star schema) |
-| Orkestrasi | **Apache Airflow** 2.9 |
-| Data Quality | dbt tests (`not_null`, `unique`, `relationships`, `accepted_range`) |
-| Visualisasi | **Metabase** |
-| Infrastruktur | **Docker Compose** |
+| Lapisan             | Tools                                                               |
+| ------------------- | ------------------------------------------------------------------- |
+| Ingestion           | Python (`requests`, `pandas`, `pyarrow`)                            |
+| Storage / Warehouse | PostgreSQL 16, Parquet (landing zone)                               |
+| Transformasi        | **dbt** (staging → marts, star schema)                              |
+| Orkestrasi          | **Apache Airflow** 2.9                                              |
+| Data Quality        | dbt tests (`not_null`, `unique`, `relationships`, `accepted_range`) |
+| Visualisasi         | **Metabase**                                                        |
+| Infrastruktur       | **Docker Compose**                                                  |
 
 ---
 
@@ -60,6 +60,7 @@ flowchart LR
                              │ windspeed_max        │      └──────────────┘
                              └──────────────────────┘
 ```
+
 **Grain fakta:** satu baris = satu kota per satu hari.
 
 ---
@@ -94,8 +95,6 @@ docker compose up -d                 # Airflow + Metabase
 
 ## 🖼️ Screenshot
 
-> _Tambahkan screenshot kamu di folder `docs/` lalu update path di bawah._
-
 **Dashboard Metabase**
 ![Dashboard](docs/dashboard.png)
 
@@ -124,6 +123,7 @@ Bagian ini menjelaskan **kenapa**, bukan sekadar **apa** — inti dari engineeri
 ## ✅ Data Quality
 
 Diuji otomatis lewat `dbt test` setiap pipeline run:
+
 - `not_null` & `unique` pada surrogate key.
 - `relationships` — integritas referensial fact → dim.
 - `accepted_range` — suhu harus dalam rentang masuk akal (−20°C s/d 55°C) untuk menangkap anomali.
@@ -155,4 +155,4 @@ weather-pipeline/
 
 ---
 
-*Dibuat sebagai proyek belajar Data Engineering. Feedback & saran sangat diterima!*
+_Dibuat sebagai proyek belajar Data Engineering. Feedback & saran sangat diterima!_
