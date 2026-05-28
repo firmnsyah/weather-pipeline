@@ -2,7 +2,7 @@
 
 Data pipeline **end-to-end** yang mengambil data cuaca harian beberapa kota Indonesia dari [Open-Meteo API](https://open-meteo.com/), memuatnya ke PostgreSQL, mentransformasikannya menjadi **star schema** dengan dbt, mengorkestrasinya dengan **Apache Airflow**, dan menyajikannya lewat dashboard **Metabase**.
 
-> Proyek portofolio Data Engineering — dibangun dari nol untuk mendemonstrasikan alur kerja DE modern: ingestion, data warehousing, transformasi (ELT), orkestrasi, data quality, dan visualisasi.
+> Proyek portofolio Data Engineering - dibangun dari nol untuk mendemonstrasikan alur kerja DE modern: ingestion, data warehousing, transformasi (ELT), orkestrasi, data quality, dan visualisasi.
 
 ---
 
@@ -10,12 +10,12 @@ Data pipeline **end-to-end** yang mengambil data cuaca harian beberapa kota Indo
 
 ```mermaid
 flowchart LR
-    A[Open-Meteo API] -->|ingestion Python| B[(data/raw<br/>Parquet)]
-    B -->|load idempotent| C[(PostgreSQL<br/>raw_weather)]
-    C -->|dbt: staging| D[stg_weather]
-    D -->|dbt: marts| E[(Star Schema<br/>dim_city · dim_date<br/>fact_weather_daily)]
-    E -->|SQL| F[Metabase Dashboard]
-    G[Apache Airflow] -.orkestrasi harian.-> A
+    A["Open-Meteo API"] -->|ingestion Python| B["data/raw (Parquet)"]
+    B -->|load idempotent| C[("PostgreSQL raw_weather")]
+    C -->|dbt staging| D["stg_weather"]
+    D -->|dbt marts| E[("Star Schema: dim_city, dim_date, fact_weather_daily")]
+    E -->|SQL| F["Metabase Dashboard"]
+    G["Apache Airflow"] -. orkestrasi harian .-> A
     G -.-> C
     G -.-> E
 ```
