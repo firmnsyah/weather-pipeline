@@ -1,4 +1,3 @@
-import pandas as pd
 from ingestion.fetch_weather import to_dataframe
 
 def test_to_dataframe_shape():

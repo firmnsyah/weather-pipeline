@@ -1,0 +1,29 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+
+# Secrets & environment
+.env
+
+# Data (landing zone — reproducible dari ingestion)
+data/
+
+# dbt
+dbt/**/target/
+dbt/**/dbt_packages/
+dbt/**/logs/
+dbt/logs/
+dbt/**/.user.yml
+
+# logs (dbt bisa menulis ke ./logs tergantung cwd)
+logs/
+*.log
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/

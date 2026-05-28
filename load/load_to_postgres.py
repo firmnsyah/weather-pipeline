@@ -22,7 +22,8 @@ CREATE TABLE IF NOT EXISTS raw_weather (
     temperature_2m_max  DOUBLE PRECISION,
     temperature_2m_min  DOUBLE PRECISION,
     precipitation_sum   DOUBLE PRECISION,
-    windspeed_10m_max  DOUBLE PRECISION,
+    windspeed_10m_max   DOUBLE PRECISION,
+    ingested_at         TIMESTAMPTZ NOT NULL DEFAULT now(),
     PRIMARY KEY (city, weather_date)
 );
 """
@@ -36,7 +37,8 @@ UPSERT = text("""
             temperature_2m_max = EXCLUDED.temperature_2m_max,
             temperature_2m_min = EXCLUDED.temperature_2m_min,
             precipitation_sum = EXCLUDED.precipitation_sum,
-            windspeed_10m_max = EXCLUDED.windspeed_10m_max
+            windspeed_10m_max = EXCLUDED.windspeed_10m_max,
+            ingested_at = now()
 """)
     
 def get_engine():

@@ -2,7 +2,6 @@ import json
 import logging
 from datetime import date
 from pathlib import Path
-from venv import logger
 
 import pandas as pd
 import requests
@@ -54,7 +53,7 @@ def main() -> None:
     combined_df = pd.concat(frames, ignore_index=True)
     output_path = RAW_DATA_DIR / f"weather_{run_date}.parquet"
     combined_df.to_parquet(output_path, index=False)
-    logger.info(f"Weather data saved %d rows to %s", len(combined_df), output_path)
+    logger.info("Weather data saved %d rows to %s", len(combined_df), output_path)
 
 if __name__ == "__main__":
     main()
