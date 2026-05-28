@@ -1,4 +1,27 @@
+x-airflow-common: &airflow-common
+  image: apache/airflow:2.9.3-python3.11
+  environment: &airflow-env
+    AIRFLOW__CORE__EXECUTOR: LocalExecutor
+    # Airflow pakai DATABASE SENDIRI (airflow-postgres) — BUKAN database proyek (weatherdb)
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow-postgres/airflow
+    AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+    _PIP_ADDITIONAL_REQUIREMENTS: "requests pandas pyarrow sqlalchemy psycopg2-binary python-dotenv dbt-postgres"
+    # Agar skrip Python & dbt DI DALAM container terhubung ke Postgres proyek
+    # lewat nama service 'postgres' (BUKAN 'localhost' — localhost = container itu sendiri).
+    POSTGRES_HOST: postgres
+    POSTGRES_PORT: "5432"
+    POSTGRES_USER: ${POSTGRES_USER}
+    POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    POSTGRES_DB: ${POSTGRES_DB}
+    DBT_PROFILES_DIR: /opt/project/dbt/weather_dbt
+  volumes:
+    - ./airflow/dags:/opt/airflow/dags
+    - ./:/opt/project
+  depends_on:
+    - airflow-postgres
+
 services:
+  # === Database PROYEK: data cuaca (raw_weather, analytics) ===
   postgres:
     image: postgres:16
     container_name: weather_postgres
@@ -11,5 +34,43 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  # === Database METADATA Airflow: TERPISAH, tidak mengotori data proyek ===
+  airflow-postgres:
+    image: postgres:16
+    container_name: airflow_postgres
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    volumes:
+      - airflow_pgdata:/var/lib/postgresql/data
+
+  airflow-init:
+    <<: *airflow-common
+    entrypoint: /bin/bash
+    command: -c "airflow db migrate && airflow users create --username admin --password admin --firstname a --lastname b --role Admin --email a@b.com"
+    restart: on-failure
+
+  airflow-webserver:
+    <<: *airflow-common
+    command: webserver
+    ports:
+      - "8080:8080"
+    restart: always
+
+  airflow-scheduler:
+    <<: *airflow-common
+    command: scheduler
+    restart: always
+
+  metabase:
+    image: metabase/metabase:latest
+    container_name: weather_metabase
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+
 volumes:
   postgres_data:
+  airflow_pgdata:
