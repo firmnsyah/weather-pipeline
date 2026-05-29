@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Weather Data Pipeline — Arsitektur</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { background: #0f172a; }
+  body {
+    width: 1280px;
+    font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: radial-gradient(1200px 600px at 50% -10%, #1e293b 0%, #0f172a 60%);
+    color: #e2e8f0;
+    padding: 44px 48px 40px;
+  }
+
+  /* Header */
+  .header { text-align: center; margin-bottom: 30px; }
+  .header h1 {
+    font-size: 34px; font-weight: 700; letter-spacing: -0.5px;
+    color: #f8fafc;
+  }
+  .header h1 .accent { color: #38bdf8; }
+  .header p {
+    margin-top: 8px; font-size: 15px; color: #94a3b8; font-weight: 400;
+  }
+
+  /* Main flow row */
+  .flow {
+    display: flex; align-items: stretch; justify-content: center;
+    gap: 0; margin: 6px 0 26px;
+  }
+  .card {
+    flex: 1 1 0; min-width: 0;
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 14px;
+    padding: 16px 12px 14px;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 8px 22px rgba(0,0,0,0.35);
+  }
+  .card .top { height: 4px; border-radius: 4px; width: 46px; margin: 0 auto 12px; }
+  .card .icon { font-size: 30px; line-height: 1; margin-bottom: 9px; }
+  .card .name { font-size: 15px; font-weight: 650; color: #f1f5f9; }
+  .card .sub { font-size: 11.5px; color: #94a3b8; margin-top: 6px; line-height: 1.45; }
+
+  /* accents */
+  .a-blue   { background: #38bdf8; }
+  .a-teal   { background: #2dd4bf; }
+  .a-amber  { background: #fbbf24; }
+  .a-indigo { background: #818cf8; }
+  .a-orange { background: #fb923c; }
+  .a-green  { background: #4ade80; }
+
+  /* Arrow between cards */
+  .arrow {
+    flex: 0 0 64px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 5px; position: relative;
+  }
+  .arrow .label {
+    font-size: 10px; color: #7dd3fc; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.4px; white-space: nowrap;
+  }
+  .arrow .line { font-size: 22px; color: #475569; line-height: 1; }
+
+  /* Orchestration band */
+  .orchestration {
+    background: linear-gradient(90deg, rgba(45,212,191,0.12), rgba(56,189,248,0.12));
+    border: 1px solid #2dd4bf55;
+    border-radius: 14px;
+    padding: 15px 22px;
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 16px;
+  }
+  .orchestration .badge {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 16px; font-weight: 650; color: #5eead4; white-space: nowrap;
+  }
+  .orchestration .badge .ic { font-size: 24px; }
+  .orchestration .desc { font-size: 13px; color: #cbd5e1; }
+  .orchestration .desc b { color: #f1f5f9; }
+
+  /* Footer chips */
+  .footer { display: flex; gap: 14px; }
+  .chip {
+    flex: 1; background: #1e293b; border: 1px solid #334155;
+    border-radius: 12px; padding: 13px 16px;
+    display: flex; align-items: center; gap: 11px;
+  }
+  .chip .ic { font-size: 22px; }
+  .chip .t { font-size: 13px; font-weight: 650; color: #f1f5f9; }
+  .chip .d { font-size: 11px; color: #94a3b8; margin-top: 2px; }
+
+  .credit {
+    text-align: center; margin-top: 22px;
+    font-size: 11.5px; color: #64748b; letter-spacing: 0.3px;
+  }
+  .credit b { color: #94a3b8; }
+</style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>🌦️ Weather Data Pipeline <span class="accent">Indonesia</span></h1>
+    <p>Pipeline data cuaca harian end-to-end &nbsp;·&nbsp; ingest → load → transform → test → visualize</p>
+  </div>
+
+  <!-- MAIN FLOW -->
+  <div class="flow">
+    <div class="card">
+      <div class="top a-blue"></div>
+      <div class="icon">🌐</div>
+      <div class="name">Open-Meteo API</div>
+      <div class="sub">Sumber data cuaca<br>5 kota Indonesia</div>
+    </div>
+
+    <div class="arrow"><span class="label">ingest</span><span class="line">→</span></div>
+
+    <div class="card">
+      <div class="top a-teal"></div>
+      <div class="icon">🐍</div>
+      <div class="name">Ingestion</div>
+      <div class="sub">Python<br>requests · pandas · pyarrow</div>
+    </div>
+
+    <div class="arrow"><span class="label">Parquet</span><span class="line">→</span></div>
+
+    <div class="card">
+      <div class="top a-amber"></div>
+      <div class="icon">📦</div>
+      <div class="name">Landing Zone</div>
+      <div class="sub">data/raw<br>format Parquet (kolumnar)</div>
+    </div>
+
+    <div class="arrow"><span class="label">upsert</span><span class="line">→</span></div>
+
+    <div class="card">
+      <div class="top a-indigo"></div>
+      <div class="icon">🐘</div>
+      <div class="name">PostgreSQL</div>
+      <div class="sub">raw_weather<br>load idempotent</div>
+    </div>
+
+    <div class="arrow"><span class="label">ELT</span><span class="line">→</span></div>
+
+    <div class="card">
+      <div class="top a-orange"></div>
+      <div class="icon">🔧</div>
+      <div class="name">dbt</div>
+      <div class="sub">staging → marts<br>star schema (Kimball)</div>
+    </div>
+
+    <div class="arrow"><span class="label">SQL</span><span class="line">→</span></div>
+
+    <div class="card">
+      <div class="top a-green"></div>
+      <div class="icon">📊</div>
+      <div class="name">Metabase</div>
+      <div class="sub">Dashboard<br>visualisasi cuaca</div>
+    </div>
+  </div>
+
+  <!-- ORCHESTRATION -->
+  <div class="orchestration">
+    <div class="badge"><span class="ic">🪂</span> Apache Airflow</div>
+    <div class="desc">
+      Mengorkestrasi <b>seluruh alur secara otomatis tiap hari</b> — schedule, dependency antar-task, dan <b>retry otomatis</b> saat gagal.
+    </div>
+  </div>
+
+  <!-- FOOTER CHIPS -->
+  <div class="footer">
+    <div class="chip">
+      <span class="ic">🐳</span>
+      <div><div class="t">Docker Compose</div><div class="d">Seluruh stack jalan dengan satu perintah</div></div>
+    </div>
+    <div class="chip">
+      <span class="ic">✅</span>
+      <div><div class="t">Data Quality — dbt tests</div><div class="d">not_null · unique · relationships · accepted_range</div></div>
+    </div>
+    <div class="chip">
+      <span class="ic">⚙️</span>
+      <div><div class="t">GitHub Actions — CI</div><div class="d">Lint + test otomatis tiap push</div></div>
+    </div>
+  </div>
+
+  <div class="credit">Star schema: <b>fact_weather_daily</b> + <b>dim_city</b> + <b>dim_date</b> &nbsp;·&nbsp; grain: 1 kota × 1 hari &nbsp;·&nbsp; github.com/firmnsyah/weather-pipeline</div>
+
+</body>
+</html>

@@ -8,6 +8,11 @@ Data pipeline **end-to-end** yang mengambil data cuaca harian beberapa kota Indo
 
 ## 🏗️ Arsitektur
 
+![Arsitektur Weather Data Pipeline](docs/architecture.png)
+
+<details>
+<summary>Diagram versi teks (Mermaid)</summary>
+
 ```mermaid
 flowchart LR
     A["Open-Meteo API"] -->|ingestion Python| B["data/raw (Parquet)"]
@@ -19,6 +24,8 @@ flowchart LR
     G -.-> C
     G -.-> E
 ```
+
+</details>
 
 **Alur:** `ingest → load → transform (dbt) → test → visualize`, dijadwalkan otomatis tiap hari oleh Airflow.
 
