@@ -1,0 +1,17 @@
+# Normalisasi line-ending: simpan LF di repo, sesuaikan di working copy.
+* text=auto eol=lf
+
+# File teks eksplisit
+*.py    text
+*.sql   text
+*.md    text
+*.yml   text
+*.yaml  text
+*.toml  text
+*.ini   text
+*.env   text
+
+# File biner (jangan diutak-atik line-ending-nya)
+*.png      binary
+*.jpg      binary
+*.parquet  binary
